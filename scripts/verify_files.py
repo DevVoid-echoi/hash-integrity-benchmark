@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from hashing import file_digest
 
 FILES = [f"data/random_{mb}MB.bin" for mb in (1, 10, 50, 100)]
-OUT = "results/week2_digest.csv"
+OUT = "results/week2_digests.csv"
 
 
 def main():
