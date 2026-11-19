@@ -20,10 +20,11 @@ So sánh các phương pháp kiểm tra tính toàn vẹn dữ liệu: **CRC32**
 hash-integrity-benchmark/
 ├── data/            # file thử nghiệm, sinh bằng script (không đưa lên Git)
 ├── src/             # mã nguồn: crc32.py, hashing.py, benchmark.py
-├── scripts/         # gen_files.py: sinh dữ liệu thử nghiệm
+├── scripts/         # gen_files.py: sinh dữ liệu; verify_files.py: tính và đối chiếu giá trị kiểm tra
 ├── results/         # file CSV số liệu đo
-├── tests/           # kiểm thử tính đúng đắn (test vector)
+├── tests/           # kiểm thử tính đúng đắn bằng pytest
 ├── reports/         # báo cáo tiến độ hằng tuần
+├── pytest.ini
 ├── requirements.txt
 └── README.md
 ```
@@ -33,7 +34,7 @@ hash-integrity-benchmark/
 Yêu cầu Python 3.9 trở lên, vì script dùng `random.randbytes`. Dự án được phát triển trên Python 3.14.
 
 ```bash
-git clone <link-repo>
+git clone https://github.com/DevVoid-echoi/hash-integrity-benchmark.git
 cd hash-integrity-benchmark
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
@@ -57,6 +58,40 @@ Script tạo 4 file nhị phân ngẫu nhiên trong `data/`. Seed được cố 
 | `random_50MB.bin` | 52,428,800 | `8111ebd50f447a44425b2521072a871ee3e15fb2b8fd79f938973e00d294b0d2` |
 | `random_100MB.bin` | 104,857,600 | `8891b6d9ee4d4be896101814e7250815a9735bd4395a288535d54009dd4374c1` |
 
+## Chạy kiểm thử
+
+Bộ kiểm thử viết bằng pytest, gồm 10 hàm kiểm thử sinh ra 49 trường hợp (test vector chuẩn, so sánh với `zlib`, tính theo khối, file rỗng):
+
+```bash
+python -m pytest -v
+```
+
+Kết quả mong đợi: `49 passed`.
+
+## Tính và đối chiếu giá trị kiểm tra
+
+Tính CRC32 (tự cài và zlib), MD5, SHA-256 cho 4 file thử nghiệm, so sánh CRC32 tự cài với zlib và ghi kết quả ra `results/week2_digests.csv`:
+
+```bash
+python scripts/verify_files.py
+```
+
+Kết quả CRC32 mong đợi:
+
+| File | CRC32 |
+|---|---|
+| `random_1MB.bin` | `0b5398da` |
+| `random_10MB.bin` | `0c0101e8` |
+| `random_50MB.bin` | `fe2ecb25` |
+| `random_100MB.bin` | `f7bf269e` |
+
+Đối chiếu MD5 và SHA-256 với công cụ hệ thống:
+
+```bash
+md5 -r data/*.bin              # Linux: md5sum data/*.bin
+shasum -a 256 data/*.bin       # Linux: sha256sum data/*.bin
+```
+
 ## Test vector chuẩn
 
 | Thuật toán | Đầu vào | Kết quả chuẩn |
@@ -78,7 +113,7 @@ Script tạo 4 file nhị phân ngẫu nhiên trong `data/`. Seed được cố 
 ## Tiến độ
 
 - [x] Tuần 1: phân tích đề, tìm hiểu lý thuyết, thiết lập môi trường, sinh dữ liệu thử nghiệm
-- [ ] Tuần 2: tự cài đặt CRC32, viết mô-đun MD5/SHA-256, viết bộ kiểm thử tự động
+- [x] Tuần 2: tự cài đặt CRC32, viết mô-đun MD5/SHA-256, viết bộ kiểm thử tự động
 - [ ] Tuần 3: đo thời gian và thông lượng, ghi kết quả ra CSV
 - [ ] Tuần 4: thực nghiệm sửa đổi dữ liệu
 - [ ] Tuần 5–6: phân tích bảo mật, bản cài đặt C/C++, tổng hợp báo cáo
