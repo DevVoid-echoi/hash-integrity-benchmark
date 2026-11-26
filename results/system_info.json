@@ -1,0 +1,23 @@
+{
+  "platform": "macOS-27.2.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.7",
+  "python_impl": "CPython",
+  "zlib_compile_version": "1.2.12",
+  "zlib_runtime_version": "1.2.12",
+  "openssl_version": "OpenSSL 3.6.4 25 Aug 2026",
+  "md5_backend": "_hashlib",
+  "sha256_backend": "_hashlib",
+  "md5_repr": "<md5 _hashlib.HASH object @ 0x10a023010>",
+  "sha256_repr": "<sha256 _hashlib.HASH object @ 0x10a023010>",
+  "cpu": "Apple M5",
+  "cores_total": "10",
+  "cores_performance": "4",
+  "cores_efficiency": "6",
+  "ram_bytes": "25769803776",
+  "hw_crc32": "1",
+  "hw_sha256": "1",
+  "hw_sha512": "1",
+  "hw_pmull": "1",
+  "macos_version": "27.2.1"
+}
